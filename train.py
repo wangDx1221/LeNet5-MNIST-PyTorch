@@ -1,54 +1,63 @@
-from model import Model
+# -*- coding: utf-8 -*-
+# @Time     : 2024/10/14 16:03
+# @Author   : wangDx
+# @File     : main.py
+# @describe :基于LeNet-5的手写体识别之训练数据
+
+from torchvision import datasets, transforms
+from model import LeNet
 import numpy as np
 import os
 import torch
-from torchvision.datasets import mnist
 from torch.nn import CrossEntropyLoss
 from torch.optim import SGD
 from torch.utils.data import DataLoader
-from torchvision.transforms import ToTensor
 
-if __name__ == '__main__':
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    batch_size = 256
-    train_dataset = mnist.MNIST(root='./train', train=True, transform=ToTensor())
-    test_dataset = mnist.MNIST(root='./test', train=False, transform=ToTensor())
-    train_loader = DataLoader(train_dataset, batch_size=batch_size)
-    test_loader = DataLoader(test_dataset, batch_size=batch_size)
-    model = Model().to(device)
-    sgd = SGD(model.parameters(), lr=1e-1)
-    loss_fn = CrossEntropyLoss()
-    all_epoch = 100
-    prev_acc = 0
-    for current_epoch in range(all_epoch):
-        model.train()
-        for idx, (train_x, train_label) in enumerate(train_loader):
-            train_x = train_x.to(device)
-            train_label = train_label.to(device)
-            sgd.zero_grad()
-            predict_y = model(train_x.float())
-            loss = loss_fn(predict_y, train_label.long())
-            loss.backward()
-            sgd.step()
+# 1.是否使用GPU
+DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-        all_correct_num = 0
-        all_sample_num = 0
-        model.eval()
-        
-        for idx, (test_x, test_label) in enumerate(test_loader):
-            test_x = test_x.to(device)
-            test_label = test_label.to(device)
-            predict_y = model(test_x.float()).detach()
-            predict_y =torch.argmax(predict_y, dim=-1)
-            current_correct_num = predict_y == test_label
-            all_correct_num += np.sum(current_correct_num.to('cpu').numpy(), axis=-1)
-            all_sample_num += current_correct_num.shape[0]
-        acc = all_correct_num / all_sample_num
-        print('accuracy: {:.3f}'.format(acc), flush=True)
-        if not os.path.isdir("models"):
-            os.mkdir("models")
-        torch.save(model, 'models/mnist_{:.3f}.pkl'.format(acc))
-        if np.abs(acc - prev_acc) < 1e-4:
-            break
-        prev_acc = acc
-    print("Model finished training")
+# 2.设置超参数
+EPOCHS = 10  # 训练轮次
+BATCH_SIZE = 256  # 一轮训练批量大小
+LR = 1e-1  # 学习率
+
+# 3.下载并配置数据集
+train_dataset = datasets.MNIST(root="F:/pycharm/Project/LeNet5-MNIST-PyTorch/data", train=True,
+                               transform=transforms.ToTensor(), download=True)
+
+# 4.配置数据加载器
+train_loader = DataLoader(dataset=train_dataset, batch_size=BATCH_SIZE, shuffle=True)
+
+# 5.将模型加载到设备上
+model = LeNet().to(DEVICE)
+
+# 6.定义损失函数和优化器
+loss_fn = CrossEntropyLoss()
+sgd = SGD(model.parameters(), lr=LR)
+
+# 7.训练模型
+total_step = len(train_loader)  # 总训练次数
+
+for epoch in range(EPOCHS):
+    model.train()
+    for idx, (images, labels) in enumerate(train_loader):
+        images = images.to(DEVICE)
+        labels = labels.to(DEVICE)
+
+        # 前向传播
+        outputs = model(images.float())
+        loss = loss_fn(outputs, labels.long())
+
+        # 反向传播,更新优化器
+        sgd.zero_grad()  # 梯度置零
+        loss.backward()  # loss反向传播计算梯度
+        sgd.step()  # 更新网络参数
+
+        if (idx + 1) % 100 == 0:
+            print(f'Epoch[{epoch + 1}/{EPOCHS}], Step[{idx + 1}/{total_step}], Loss:{loss.item():.4f}')
+
+if not os.path.isdir("models"):
+    os.mkdir("models")
+torch.save(model, 'models/model.pth')
+
+print("Model finished training")
