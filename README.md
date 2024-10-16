@@ -2,7 +2,8 @@
 
 #### This is a simple handwritten number recognition project based on LeNet-5, which uses the framework of pytorch.
 #### The following is the flow chart of the LeNet-5 network model.
-![image](https://user-images.githubusercontent.com/25716030/162345646-b13c9af0-bdb5-4ce7-9a62-c0834cba9e5f.png)
+
+![image](/img/162345646-b13c9af0-bdb5-4ce7-9a62-c0834cba9e5f.png)
 ## Requirments
 ```
 matplotlib==3.7.2
@@ -24,5 +25,9 @@ pip install -r requirements.txt
 #### run train.py
 #### run test.py
 #### run example.py
+
+## Show
+
+![image](img/1729079777910.png)
 ## Accuracy
 Average precision on test set: 98%
