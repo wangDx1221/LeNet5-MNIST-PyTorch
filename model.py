@@ -39,3 +39,5 @@ class LeNet(nn.Module):
         x = self.fc2(x)
         x = self.fc3(x)
         return x
+
+    print("Model Create Finished!")
