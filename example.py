@@ -22,7 +22,7 @@ test_dataset = datasets.MNIST(root="F:/pycharm/Project/LeNet5-MNIST-PyTorch/data
 # 4.配置数据加载器
 test_loader = DataLoader(dataset=test_dataset, batch_size=BATCH_SIZE, shuffle=False)
 
-# 5.加载模型
+# 5.加载模型Al
 model = torch.load('models/model.pth')
 
 

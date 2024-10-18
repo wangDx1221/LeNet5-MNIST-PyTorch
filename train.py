@@ -9,7 +9,7 @@ from model import LeNet
 import os
 import torch
 from torch.nn import CrossEntropyLoss
-from torch.optim import SGD
+from torch.optim import Adam
 from torch.utils.data import DataLoader
 
 # 1.是否使用GPU进行训练数据
@@ -32,7 +32,7 @@ model = LeNet().to(DEVICE)
 
 # 6.定义损失函数和优化器
 loss_fn = CrossEntropyLoss()  # 交叉熵函数损失
-sgd = SGD(model.parameters(), lr=LR)  # SGD 梯度下降法
+option = Adam(model.parameters(), lr=LR)  # SGD 梯度下降法
 
 # 7.训练模型
 for epoch in range(EPOCHS):
@@ -54,9 +54,9 @@ for epoch in range(EPOCHS):
         loss = loss_fn(outputs, labels.long())
 
         # 反向传播,更新优化器
-        sgd.zero_grad()  # 梯度置零
+        option.zero_grad()  # 梯度置零
         loss.backward()  # loss反向传播计算梯度
-        sgd.step()  # 更新网络参数
+        option.step()  # 更新网络参数
 
         if (idx + 1) % 100 == 0:
             print(f'Epoch[{epoch + 1}/{EPOCHS}], Step[{idx + 1}/{len(train_loader)}], Loss:{loss.item():.4f}')
