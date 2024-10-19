@@ -26,6 +26,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example.py" beforeDir="false" afterPath="$PROJECT_DIR$/example.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/model.pth" beforeDir="false" afterPath="$PROJECT_DIR$/models/model.pth" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/train.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -85,7 +86,7 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   }
 }</component>
-  <component name="RunManager" selected="Python.train">
+  <component name="RunManager" selected="Python.example">
     <configuration name="example" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="LeNet5-MNIST-PyTorch" />
       <option name="ENV_FILES" value="" />
@@ -176,10 +177,10 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.train" />
-        <item itemvalue="Python.model" />
         <item itemvalue="Python.example" />
         <item itemvalue="Python.test" />
+        <item itemvalue="Python.train" />
+        <item itemvalue="Python.model" />
       </list>
     </recent_temporary>
   </component>
@@ -232,7 +233,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729080152399</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Commit Project.">
+      <option name="closed" value="true" />
+      <created>1729255466127</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1729255466127</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

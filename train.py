@@ -9,7 +9,7 @@ from model import LeNet
 import os
 import torch
 from torch.nn import CrossEntropyLoss
-from torch.optim import Adam
+import torch.optim as optim
 from torch.utils.data import DataLoader
 
 # 1.是否使用GPU进行训练数据
@@ -21,8 +21,14 @@ BATCH_SIZE = 256  # 一轮训练批量大小
 LR = 1e-1  # 学习率
 
 # 3.下载训练数据集
+
+# 构建pipline 对图像做处理
+pipeline = transforms.Compose([
+    transforms.ToTensor(),  # 将图片转换成tensor
+    transforms.Normalize((0.1307,), (0.3081,))  # 正则化 降低模型复杂度
+])
 train_dataset = datasets.MNIST(root="F:/pycharm/Project/LeNet5-MNIST-PyTorch/data", train=True,
-                               transform=transforms.ToTensor(), download=True)
+                               transform=pipeline, download=True)
 
 # 4.配置训练数据加载器
 train_loader = DataLoader(dataset=train_dataset, batch_size=BATCH_SIZE, shuffle=True)  # shuffle 将训练集顺序打乱
@@ -32,7 +38,7 @@ model = LeNet().to(DEVICE)
 
 # 6.定义损失函数和优化器
 loss_fn = CrossEntropyLoss()  # 交叉熵函数损失
-option = Adam(model.parameters(), lr=LR)  # SGD 梯度下降法
+option = optim.Adam(model.parameters())  # Adam 梯度下降法
 
 # 7.训练模型
 for epoch in range(EPOCHS):
@@ -58,8 +64,8 @@ for epoch in range(EPOCHS):
         loss.backward()  # loss反向传播计算梯度
         option.step()  # 更新网络参数
 
-        if (idx + 1) % 100 == 0:
-            print(f'Epoch[{epoch + 1}/{EPOCHS}], Step[{idx + 1}/{len(train_loader)}], Loss:{loss.item():.4f}')
+        if idx % 3000 == 0:
+            print("Train Epoch : {} \t Loss:{:.6f}".format(epoch, loss.item()))
 
 # 当没有models文件夹时,要创建文件夹
 if not os.path.isdir("models"):

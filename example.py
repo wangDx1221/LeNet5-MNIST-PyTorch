@@ -15,9 +15,14 @@ DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 # 2.设置超参数
 BATCH_SIZE = 256  # 一轮训练批量大小
 
+# 构建pipline 对图像做处理
+pipeline = transforms.Compose([
+    transforms.ToTensor(),  # 将图片转换成tensor
+    transforms.Normalize((0.1307,), (0.3081,))  # 正则化 降低模型复杂度
+])
 # 3.下载并配置数据集
 test_dataset = datasets.MNIST(root="F:/pycharm/Project/LeNet5-MNIST-PyTorch/data", train=False,
-                              transform=transforms.ToTensor(), download=True)
+                              transform=pipeline, download=True)
 
 # 4.配置数据加载器
 test_loader = DataLoader(dataset=test_dataset, batch_size=BATCH_SIZE, shuffle=False)
