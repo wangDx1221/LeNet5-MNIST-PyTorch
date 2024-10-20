@@ -21,13 +21,12 @@ pipeline = transforms.Compose([
     transforms.Normalize((0.1307,), (0.3081,))  # 正则化 降低模型复杂度
 ])
 # 3.下载并配置数据集
-test_dataset = datasets.MNIST(root="F:/pycharm/Project/LeNet5-MNIST-PyTorch/data", train=False,
-                              transform=pipeline, download=True)
+test_dataset = datasets.MNIST(root="./data/test", train=False, transform=pipeline, download=True)
 
 # 4.配置数据加载器
 test_loader = DataLoader(dataset=test_dataset, batch_size=BATCH_SIZE, shuffle=False)
 
-# 5.加载模型Al
+# 5.加载模型
 model = torch.load('models/model.pth')
 
 

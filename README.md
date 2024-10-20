@@ -4,7 +4,8 @@
 #### The following is the flow chart of the LeNet-5 network model.
 
 ![image](./img/162345646-b13c9af0-bdb5-4ce7-9a62-c0834cba9e5f.png)
-## Requirments
+
+## Requirements
 ```
 matplotlib==3.7.2
 numpy==1.23.5

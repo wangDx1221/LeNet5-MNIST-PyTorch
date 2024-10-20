@@ -16,19 +16,16 @@ from torch.utils.data import DataLoader
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 # 2.设置超参数
-EPOCHS = 10  # 训练轮次
+EPOCHS = 16  # 训练轮次
 BATCH_SIZE = 256  # 一轮训练批量大小
-LR = 1e-1  # 学习率
-
-# 3.下载训练数据集
 
 # 构建pipline 对图像做处理
 pipeline = transforms.Compose([
     transforms.ToTensor(),  # 将图片转换成tensor
-    transforms.Normalize((0.1307,), (0.3081,))  # 正则化 降低模型复杂度
+    transforms.Normalize((0.1307,), (0.3081,))  # 数据标准化 提高模型泛化能力 加速模型训练
 ])
-train_dataset = datasets.MNIST(root="F:/pycharm/Project/LeNet5-MNIST-PyTorch/data", train=True,
-                               transform=pipeline, download=True)
+# 3.下载训练数据集
+train_dataset = datasets.MNIST(root="./data/train", train=True, transform=pipeline, download=True)
 
 # 4.配置训练数据加载器
 train_loader = DataLoader(dataset=train_dataset, batch_size=BATCH_SIZE, shuffle=True)  # shuffle 将训练集顺序打乱
@@ -46,6 +43,8 @@ for epoch in range(EPOCHS):
     在训练模式下，模型会启用 dropout 和 batch normalization 等正则化方法
     并且可以计算梯度以进行参数更新，同时还可以追踪梯度计算的图。'''
     model.train()
+    total = 0
+    correct = 0.0
     '''
     在PyTorch中，enumerate 函数并不是PyTorch特有的，而是Python内置的一个函数
     用于将一个可遍历的数据对象（如列表、元组或字符串）组合为一个索引序列，同时列出数据和数据下标，一般用在for循环当中。
@@ -55,17 +54,25 @@ for epoch in range(EPOCHS):
         images = images.to(DEVICE)
         labels = labels.to(DEVICE)
 
+        option.zero_grad()  # 梯度置零
+
         # 前向传播
         outputs = model(images.float())
         loss = loss_fn(outputs, labels.long())
 
         # 反向传播,更新优化器
         option.zero_grad()  # 梯度置零
+
+        predict = outputs.argmax(dim=1)
+        total += labels.size(0)
+        correct += (predict == labels).sum().item()
+
         loss.backward()  # loss反向传播计算梯度
         option.step()  # 更新网络参数
 
-        if idx % 3000 == 0:
-            print("Train Epoch : {} \t Loss:{:.6f}".format(epoch, loss.item()))
+        if idx % 1000 == 0:
+            print(
+                "Train Epoch{} \t Loss: {:.6f}, accuracy: {:.6f}%".format(epoch, loss.item(), 100 * (correct / total)))
 
 # 当没有models文件夹时,要创建文件夹
 if not os.path.isdir("models"):
